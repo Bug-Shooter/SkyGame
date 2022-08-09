@@ -1,0 +1,278 @@
+﻿@page "/"
+@page "/ship/{Id:int}"
+@inject ShipService ShipService
+@inject NavigationManager NavigationManager
+<PageTitle>@Ship.Name</PageTitle>
+
+@using SkyGame.Data
+<EditForm Model="Ship">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>Корабль</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Название</span>
+                            <InputText id="@nameof(Ship.Name)" class="form-control" @bind-Value="@Ship.Name" />
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">HP</span>
+                            <InputNumber id="@nameof(Ship.CurrentHP)" class="form-control" @bind-Value="@Ship.CurrentHP" />
+                            <span class="input-group-text">/</span>
+                            <InputNumber id="@nameof(Ship.HP)" class="form-control" @bind-Value="@Ship.HP" />
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text">V-крейс</span>
+                                    <InputNumber id="@nameof(Ship.CruisingSpeed)" class="form-control" @bind-Value="@Ship.CruisingSpeed" />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text">V-макс</span>
+                                    <InputNumber id="@nameof(Ship.MaxSpeed)" class="form-control" @bind-Value="@Ship.MaxSpeed" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="text-center text-black-50"><u>Инфо</u></h4>
+                        <div class="row row-cols-2">
+                            <div class="col"><span class="">Вес: @Ship.GetTotalWaight()</span></div>
+                            <div class="col"><span class="">Под.Сила: @Ship.GetTotalLiftingForce()</span></div>
+                            <div class="col"><span class="">Модули: @Ship.GetTotalModules()</span></div>
+                            <div class="col"><span class="">Повреждений: @(Ship.GetTotalModulesDamage()*100)%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>Обшивка</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Материал</span>
+                            <InputText id="@nameof(Ship.Matherial)" class="form-control" @bind-Value="@Ship.Matherial" />
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Вес</span>
+                            <InputNumber id="@nameof(Ship.ShellWaight)" class="form-control" @bind-Value="@Ship.ShellWaight" />
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Подъемная сила</span>
+                            <InputNumber id="@nameof(Ship.SheathingLiftingForce)" class="form-control" @bind-Value="@Ship.SheathingLiftingForce" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>@Bridge.Name</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Экипаж мостика</span>
+                            <InputNumber id="@nameof(Ship.Bridge.CrewCount)" class="form-control" @bind-Value="@Ship.Bridge.CrewCount" />
+                            <span class="input-group-text">человек</span>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Операционная Система</span>
+                            <InputText id="@nameof(Ship.Bridge.OperatingSystem)" class="form-control" @bind-Value="@Ship.Bridge.OperatingSystem" />
+                        </div>
+                        <ModuleCommon Module="@Ship.Bridge"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>@Storage.Name</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Вес</span>
+                            <InputNumber id="@nameof(Ship.Storage.CargoWeightCurrent)" class="form-control" @bind-Value="@Ship.Storage.CargoWeightCurrent" />
+                            <span class="input-group-text">/</span>
+                            <InputNumber id="@nameof(Ship.Storage.CargoWaightMax)" class="form-control" @bind-Value="@Ship.Storage.CargoWaightMax" />
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Объем</span>
+                            <InputNumber id="@nameof(Ship.Storage.Volume)" class="form-control" @bind-Value="@Ship.Storage.Volume" />
+                        </div>
+                        <ModuleCommon Module="@Ship.Storage"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>@Engineer.Name</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Порты</span>
+                            <InputText id="@nameof(Ship.Engineer.Joints)" class="form-control" @bind-Value="@Ship.Engineer.Joints" />
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Максимум устройств</span>
+                            <InputNumber id="@nameof(Ship.Engineer.MaxSystems)" class="form-control" @bind-Value="@Ship.Engineer.MaxSystems" />
+                        </div>
+                        <ModuleCommon Module="@Ship.Engineer"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>@FuelTank.Name</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Топливо</span>
+                            <InputNumber id="@nameof(Ship.FuelTank.VolumeCurrent)" class="form-control" @bind-Value="@Ship.FuelTank.VolumeCurrent" />
+                            <span class="input-group-text">/</span>
+                            <InputNumber id="@nameof(Ship.FuelTank.VolumeMax)" class="form-control" @bind-Value="@Ship.FuelTank.VolumeMax" />
+                        </div>
+                        <div class="input-group input-group-sm mb-1">
+                            <span class="input-group-text">Итоговый Вес Модуля</span>
+                            <span id="@nameof(Module.WeightBase)" class="form-control form-control-sm">@Ship.FuelTank.Weight</span>
+                        </div>
+                        <ModuleCommon Module="@Ship.FuelTank" />
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>@CoolerTank.Name</u></h4>
+                        <div class="input-group mb-2">
+                                <span class="input-group-text">Охладитель</span>
+                                <InputNumber id="@nameof(Ship.CoolerTank.VolumeCurrent)" class="form-control" @bind-Value="@Ship.CoolerTank.VolumeCurrent" />
+                                <span class="input-group-text">/</span>
+                                <InputNumber id="@nameof(Ship.CoolerTank.VolumeMax)" class="form-control" @bind-Value="@Ship.CoolerTank.VolumeMax" />
+                        </div>
+                        <div class="input-group input-group-sm mb-1">
+                            <span class="input-group-text">Итоговый Вес Модуля</span>
+                            <span id="@nameof(Module.WeightBase)" class="form-control form-control-sm">@Ship.CoolerTank.Weight</span>
+                        </div>
+                        <ModuleCommon Module="@Ship.FuelTank"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>@LetanTanks.Name</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Летан</span>
+                            <InputNumber id="@nameof(Ship.LetanTanks.VolumeCurrent)" class="form-control" @bind-Value="@Ship.LetanTanks.VolumeCurrent" />
+                            <span class="input-group-text">/</span>
+                            <InputNumber id="@nameof(Ship.LetanTanks.VolumeMax)" class="form-control" @bind-Value="@Ship.LetanTanks.VolumeMax" />
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Подъемная сила</span>
+                            <InputNumber id="@nameof(Ship.LetanTanks.VolumeCurrent)" class="form-control" @bind-Value="@Ship.LetanTanks.VolumeCurrent" disabled="" />
+                            <span class="input-group-text">Кол-во секций</span>
+                            <InputNumber id="@nameof(Ship.LetanTanks.VolumeCurrent)" class="form-control" @bind-Value="@Ship.LetanTanks.SectionsCount" />
+                        </div>
+                        <ModuleCommon Module="@Ship.LetanTanks"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>@Engine.Name</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Мощность</span>
+                            <InputNumber id="@nameof(Ship.Engine.Power)" class="form-control" @bind-Value="@Ship.Engine.Power" />
+                            <span class="input-group-text">Макс.Форсаж</span>
+                            <InputNumber id="@nameof(Ship.Engine.AfterBurnMax)" class="form-control" @bind-Value="@Ship.Engine.AfterBurnMax" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Мото-часы</span>
+                            <InputNumber id="@nameof(Ship.Engine.EngineHours)" class="form-control" @bind-Value="@Ship.Engine.EngineHours"/>
+                            <span class="input-group-text">/</span>
+                            <InputNumber id="@nameof(Ship.Engine.EngineHoursMax)" class="form-control" @bind-Value="@Ship.Engine.EngineHoursMax" />
+                        </div>
+                        <ModuleCommon Module="@Ship.LetanTanks"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-2">
+                <div class="card h-100 shadow rounded">
+                    <div class="card-body">
+                        <h4 class="text-center text-black-50"><u>@Communication.Name</u></h4>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Дальность связи</span>
+                            <InputNumber id="@nameof(Ship.Communication.CommRange)" class="form-control" @bind-Value="@Ship.Communication.CommRange" />
+                            <span class="input-group-text">м</span>
+                        </div>
+                        <ModuleCommon Module="@Ship.LetanTanks"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col d-grid gap-2 d-flex align-items-end">
+                <button class="btn btn-primary" type="button" @onclick=Save>Сохранить</button>
+                <button class="btn btn-primary" type="button" @onclick=Delete>Удалить</button>
+            </div>
+        </div>
+        @if(!string.IsNullOrEmpty(Message))
+        {
+            <div class="alert @(Success ? "alert-success":"alert-danger")" role="alert">
+                @Message
+            </div>
+        }
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    [Parameter]
+    public Ship Ship { get; set; } = new Ship();
+
+    bool Success = false;
+    string Message = "";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id == null)
+            Id = 0;
+        if (Id == -1)
+            Ship = new Ship();
+        else
+            Ship = ShipService.GetShip((int)Id);   
+    }
+
+    public void Save()
+    {
+        if(ShipService.SaveShip(Ship))
+        {
+            Message = "Успех";
+            Success = true;
+        }
+        else
+        {
+            Message = "Не получилось";
+            Success = false;
+        }
+        DisposeMessage();
+    }
+    public void Delete()
+    {
+        ShipService.DeleteShip(Ship.ID);
+        NavigationManager.NavigateTo("/");
+    }
+
+    public void DisposeMessage()
+    {
+        var timer = new System.Timers.Timer();
+        timer.Interval = TimeSpan.FromSeconds(5).TotalMilliseconds;
+        timer.Elapsed += async (sender, e) =>
+        {
+            Message = "";
+            timer.Enabled = false;
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        };
+        timer.Enabled = true;
+    }
+}
+
+

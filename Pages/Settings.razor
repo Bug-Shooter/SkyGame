@@ -1,0 +1,46 @@
+﻿@page "/settings/"
+@inject SettingsService SettingsService
+
+@using SkyGame.Data
+
+<h3 class="text-white">Settings</h3>
+<EditForm Model="@model">
+    <label class="text-white">Вес топлива</label>
+    <InputNumber @bind-Value=@model.FuelWeight></InputNumber>
+    <br/>
+    <label class="text-white">Вес охладителя</label>
+    <InputNumber @bind-Value=@model.CoolerWeight></InputNumber>
+    <br/>
+    <label class="text-white">Подъемная сила летана</label>
+    <InputNumber @bind-Value=@model.LetanLiftingForce></InputNumber>
+</EditForm>
+
+<button @onclick="@Save">Сохранить</button>
+<button @onclick="@Load">Загрузить</button>
+
+@code {
+    public StaticsServ model = new StaticsServ();
+
+    protected override void OnInitialized()
+    {
+        model = new StaticsServ
+            {
+                CoolerWeight = Statics.CoolerWeight,
+                FuelWeight = Statics.FuelWeight,
+                LetanLiftingForce = Statics.LetanLiftingForce
+        };      
+    }
+
+    public void Save()
+    {
+        Statics.FuelWeight = model.FuelWeight;
+        Statics.CoolerWeight = model.CoolerWeight;
+        Statics.LetanLiftingForce = model.LetanLiftingForce;
+        SettingsService.Save();
+    }
+
+    public void Load()
+    {
+        SettingsService.Load();
+    }
+}

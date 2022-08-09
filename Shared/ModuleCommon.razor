@@ -1,0 +1,45 @@
+﻿@using SkyGame.Data
+
+<hr class="mt-3 mb-1"/>
+<div class="row g-2">
+    <div class="col-5">
+        <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text">HP</span>
+            <InputNumber id="@nameof(Module.CurrentHP)" class="form-control" @bind-Value="@Module.CurrentHP" />
+            <span class="input-group-text">/</span>
+            <InputNumber id="@nameof(Module.HP)" class="form-control" @bind-Value="@Module.HP" />
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text">DR</span>
+            <InputNumber id="@nameof(Module.DR)" class="form-control" @bind-Value="@Module.DR" />
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text">Вес(Б)</span>
+            <InputNumber id="@nameof(Module.WeightBase)" class="form-control form-control-sm" @bind-Value="@Module.WeightBase" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text in">Энергия</span>
+            <InputNumber id="@nameof(Module.Energy)" class="form-control form-control-sm" @bind-Value="@Module.Energy" />
+        </div>
+    </div>
+        <div class="col">
+        <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text">Охлаждение</span>
+            <InputNumber id="@nameof(Module.Cooling)" class="form-control form-control-sm" @bind-Value="@Module.Cooling" />
+        </div>
+    </div>
+</div>
+<InputTextArea id="@nameof(Module.Comments)" placeholder="Комментарии" rows="1" class="form-control form-control-sm" @bind-Value="@Module.Comments" />
+
+@code {
+    [Parameter]
+    public Module Module { get; set; }
+}
